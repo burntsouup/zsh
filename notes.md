@@ -3,6 +3,11 @@ Questions:
 
 - What is a directory?
 
+- What is an interpreter(zsh)?
+
+
+
+
 # Learning Zsh
 
 ## 1. Navigating the File System
@@ -106,7 +111,36 @@ proj() {
 
 A Zsh script is a file that contains a list of commands, just like you’d type in the terminal. It allows you to automate repetitive tasks.
 
+**Shebang line**: this first line of a script determines which interpreter should be used to run the script.
 
+```Bash
+#!/bin/zsh
+```
+
+Example:
+
+```Bash
+# 1. Create script file
+touch myScript.zsh       # create the file
+chmod +x myScript.zsh    # make it executable
+code myScript.zsh        # open in VS Code
+
+# 2. Add to script
+#!/bin/zsh
+
+echo "Script is running"
+echo "Hello, $USER!"
+
+#3. Run script
+./myScript.zsh
+# output:
+# Script is running
+# Hello, burntsoup!
+```
+
+:bulb: you can’t run a script like ./myScript.zsh until it has the executable bit set: `chmod +x script.zsh`
+
+**Best practice**: keep all your scripts in a `~/scripts` or `~/bin` folder and add that folder to your **PATH** so that you can run your scripts from anywhere. In `.zshrc`, add `export PATH="$HOME/scripts:$PATH"`
 
 ### 4.2 Variables
 
