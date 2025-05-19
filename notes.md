@@ -498,7 +498,65 @@ check_file.zsh file4.txt    # ❌ File not found: file4.txt
 
 ### 4.5 Loops
 
+Loops allow you to automate repetition - running the same command on multiple files, users, lines, or values.
 
+Types:
+
+1. `for`
+
+    ```Bash
+    for item in list; do
+      # use $item
+    done
+    ```
+
+    Example:
+
+    ```Bash
+    # loops.zsh script:
+    #!/bin/zsh
+
+    list=("apple" "banana" "cherry")
+
+    echo "Grocery list:"
+    for item in $list; do
+      echo "$item!"
+    done
+    ```
+
+    ```Bash
+    loops.zsh
+    # output:
+    # Grocery list:
+    # apple!
+    # banana!
+    # cherry!
+    ```
+
+    Example:
+
+    ```Bash
+    for ((i = 1; i <= 5; i++)); do
+      echo "Iteration $i"
+    done
+    ```
+
+    ```Bash
+    loops.zsh
+    # Iteration 1
+    # Iteration 2
+    # Iteration 3
+    # Iteration 4
+    # Iteration 5
+    ```
+
+2. `while`
+
+    ```Bash
+    while [ condition ]; do
+      # do something
+    done
+    ```
 
 ### 4.6 Functions
 
