@@ -267,25 +267,238 @@ echo $what_is_life    # tacos
 
 ### 4.3 Arguments
 
-Arguments let you pass input into your script when you run it.
+Arguments are values passed to a script when you run it. They allow you to customize script behavior without modifying the script’s code.
 
-Key variables:
+When you run a script like `./greet.zsh Luke`, `Luke` is an *argument* passed to the script. Inside the script, `Luke` is accessed by *positional variables*.
 
-| Command         | Description                    |
-|-----------------|-------------------------------|
-| `pwd`           | Show current directory         |
-| `ls`            | List files in directory        |
-| `cd folderName` | Change directory              |
-| `mkdir`         | Create directory              |
-| `touch`         | Create a file                 |
-| `rm`            | Delete a file                 |
-| `open`          | Open a file                   |
-| `code`          | Open a file in VS Code        |
+Positional variables:
 
-### 4.4 Conditions
+| Variable | Meaning                      |
+|----------|------------------------------|
+| `$0`     | The name of the script       |
+| `$1`     | First argument               |
+| `$2`     | Second argument              |
+| `$@`     | All arguments as a list      |
+| `$#`     | The number of arguments      |
 
+Example:
+
+```Bash
+# greet.zsh script:
+#!/bin/zsh
+
+echo "Script name: $0"
+echo "Hello, $1!"
+echo "You passed $# argument(s): $@"
+```
+
+```Bash
+./greet.zsh Sally
+
+# output:
+# Script name: ./greet.zsh
+# Hello, Sally!
+# You passed 1 argument(s): Sally
+```
+
+**Looping through arguments** using `$@`:
+
+```Bash
+#!/bin/zsh
+
+for name in "$@"; do
+  echo "Hello, $name!"
+done
+```
+
+```Bash
+./greet.zsh Luke Sally Kyle
+
+# output:
+# Hello, Luke!
+# Hello, Sally!
+# Hello, Kyle!
+```
+
+Default values with fallbacks using `${1:-default}`:
+
+```Bash
+name=${1:-Guest}
+echo "Welcome, $name!"
+```
+
+```Bash
+./script.zsh Carl    # Welcome, Cark!
+./script.zsh         # Welcome, Guest!
+```
+
+### 4.4 Conditionals
+
+Conditionals allow your script to do different things depending on circumstances, such as:
+
+- which arguments are passed
+
+- whether a file exists
+
+- whether a number is greater than another
+
+**Conditional statements**:
+
+1. **`If` statement**:
+
+    ```Bash
+    if [ condition ]; then
+      # do something
+    fi
+    ```
+
+    Example:
+
+    ```Bash
+    # conditions.zsh script:
+    #!/bin/zsh
+
+    if [ $1 = "John" ]; then
+      echo "Hi $1!"
+    fi
+    ```
+
+    ```Bash
+    conditions.zsh John    # Hi John!
+    ```
+
+2. **`If`/`else` statement**:
+
+    ```Bash
+    if [ condition ]; then
+      # true - do something
+    else
+      # false - do something else
+    fi
+    ```
+
+    Example:
+
+    ```Bash
+    if [ $1 = "John" ]; then
+      echo "Hi $1!"
+    else
+      echo "Hi stranger!"
+    fi
+    ```
+
+3. **`If`/`elif`/`else` statement**:
+
+    ```Bash
+    if [ condition1 ]; then
+      # do this
+    elif [ condition2 ]; then
+      # do that
+    else
+      # fallback
+    fi
+    ```
+
+    Example:
+
+    ```Bash
+    if [ $1 = "John" ]; then
+      echo "Hi $1!"
+    elif [ $1 = "Jane" ]; then
+      echo "Hi $1!"
+    else
+      echo "Hi stranger!"
+    fi
+    ```
+
+**Test operators**:
+
+1. Strings
+
+    | Operator | Meaning             |
+    |----------|---------------------|
+    | =        | Equal to            |
+    | !=       | Not equal to        |
+    | -z       | String is empty     |
+    | -n       | String is not empty |
+
+    Example:
+
+    ```Bash
+    if [ -z "$1" ]; then
+      echo "No input provided"
+    fi
+    ```
+
+2. Files
+
+    | Operator | Meaning         |
+    |----------|----------------|
+    | -e       | File exists    |
+    | -f       | Is a regular file |
+    | -d       | Is a directory |
+    | -r       | Is readable    |
+    | -w       | Is writable    |
+    | -x       | Is executable  |
+
+    ```Bash
+    if [ -f "$1" ]; then
+      echo "Processing file: $1"
+    else
+      echo "File not found"
+    fi
+    ```
+
+3. Numbers
+
+    | Operator | Meaning                |
+    |----------|------------------------|
+    | -eq      | Equal                  |
+    | -ne      | Not equal              |
+    | -lt      | Less than              |
+    | -le      | Less than or equal     |
+    | -gt      | Greater than           |
+    | -ge      | Greater or equal       |
+
+    ```Bash
+    a=5
+    b=10
+
+    if [ $a -lt $b ]; then
+      echo "$a is less than $b"
+    fi
+    ```
+
+Example: create a script that takes a filename as an argument, checks if it exists, and confirms its existance.
+
+```Bash
+# check_file.zsh script:
+#!/bin/zsh
+
+file=$1
+
+if [ -z "$file" ]; then
+  echo "❌ Please provide a filename"
+  exit 1
+elif [ -f "$file" ]; then
+  echo "✅ Found file: $file"
+else
+  echo "❌ File not found"
+fi
+```
+
+```Bash
+# cd Documents/testFolder/
+ls    # file1.txt file2.txt file3.txt
+
+check_file.zsh    # ❌ Please provide a filename
+check_file.zsh file1.txt    # ✅ Found file: file1.txt
+check_file.zsh file4.txt    # ❌ File not found: file4.txt
+```
 
 ### 4.5 Loops
+
+
 
 ### 4.6 Functions
 
