@@ -64,42 +64,9 @@ Examples:
 
 - `alias gc='git commit -m'`
 
-## 3. Functions
+## 3. Scripting
 
-Functions can take arguments, run multiple commands, and include logic (conditionals or loops).
-
-:bulb: to make a function permanent, it must be added to your *zshrc* file.
-
-Syntax:
-
-```Bash
-function greet() {
-  echo "Hello, $1!"
-}
-```
-
-Examples:
-
-```Bash
-# make a directory and go into it
-mkcd() {             
-  mkdir -p "$1" && cd "$1"
-}
-
-# reload .zshrc
-reload() {             
-  source ~/.zshrc && echo "Zsh config reloaded!"
-}
-
-# go to a projects folder (customized path)
-proj() {               
-  cd ~/OneDrive/Projects/"$1"
-}
-```
-
-## 4. Scripting
-
-### 4.1 Basics
+### 3.1 Basics
 
 A Zsh script is a file that contains a list of commands, just like you’d type in the terminal. It allows you to automate repetitive tasks.
 
@@ -161,7 +128,7 @@ ls -l info.zsh    # -rwxr-xr-x  # now it's executable
 
 **Best practice**: keep all your scripts in a `~/scripts` or `~/bin` folder and add that folder to your **PATH** so that you can run your scripts from anywhere. In `zshrc`, add `export PATH="$HOME/scripts:$PATH"`. Now you can run `info.zsh` from anywhere.
 
-### 4.2 Variables
+### 3.2 Variables
 
 Variables allow you to store and reuse values, pass information to commands, and configure your environment.
 
@@ -265,7 +232,7 @@ export what_is_life="tacos"
 echo $what_is_life    # tacos
 ```
 
-### 4.3 Arguments
+### 3.3 Arguments
 
 Arguments are values passed to a script when you run it. They allow you to customize script behavior without modifying the script’s code.
 
@@ -332,7 +299,7 @@ echo "Welcome, $name!"
 ./script.zsh         # Welcome, Guest!
 ```
 
-### 4.4 Conditionals
+### 3.4 Conditionals
 
 Conditionals allow your script to do different things depending on circumstances, such as:
 
@@ -496,7 +463,7 @@ check_file.zsh file1.txt    # ✅ Found file: file1.txt
 check_file.zsh file4.txt    # ❌ File not found: file4.txt
 ```
 
-### 4.5 Loops
+### 3.5 Loops
 
 Loops allow you to automate repetition - running the same command on multiple files, users, lines, or values.
 
@@ -550,7 +517,7 @@ Types:
     # Iteration 5
     ```
 
-2. `while`
+2. `while`: repeat *while* a condition is true
 
     ```Bash
     while [ condition ]; do
@@ -558,9 +525,169 @@ Types:
     done
     ```
 
-### 4.6 Functions
+    Example:
 
-### 4.7 Error Handling & Exit Codes
+    ```Bash
+    count=4
+
+    while [ $count -gt 0 ]; do
+      echo "⏳ $count"
+      ((count--))
+    done
+
+    echo "🚀 Blast off!"
+    ```
+
+    ```Bash
+    loops.zsh
+    # ⏳ 4
+    # ⏳ 3
+    # ⏳ 2
+    # ⏳ 1
+    # 🚀 Blast off!
+    ```
+
+3. `until`: runs *until* the condition is true (opposite of `while`)
+
+    Example:
+
+    ```Bash
+    count=1
+
+    until [ $count -gt 5 ]; do
+      echo "🔁 $count"
+      ((count++))
+    done
+    ```
+
+    ```Bash
+    loop.zsh
+    # 🔁 1
+    # 🔁 2
+    # 🔁 3
+    # 🔁 4
+    # 🔁 5
+    ```
+
+4. `repeat`: *repeat* something N times
+
+    Example:
+
+    ```Bash
+    repeat 3 echo "Hi there"
+
+    # output:
+    # Hi there
+    # Hi there
+    # Hi there
+    ```
+
+5. `break` & `continue`: `break` exists the loop early, `continue` skips the rest of the current loop and goes to the next iteration
+
+    Example:
+
+    ```Bash
+    for i in {1..5}; do
+      if [ $i -eq 3 ]; then
+        echo "Skipping 3"
+        continue
+      fi
+
+      if [ $i -eq 5 ]; then
+        echo "Stopping at 5"
+        break
+      fi
+
+      echo "Value: $i"
+    done
+    ```
+
+    ```Bash
+    loops.zsh
+    # Value: 1
+    # Value: 2
+    # Skipping 3
+    # Value: 4
+    # Stopping at 5
+    ```
+
+### 3.6 Functions
+
+A function is a named block of code that can be called multiple times.
+
+Functions help:
+
+- Reduce repetition
+
+- Organize logic
+
+- Improve readability and testing
+
+:bulb: to make a function permanent, it must be added to your *zshrc* file.
+
+Examples:
+
+```Bash
+# func.zsh script:
+#!/bin/zsh
+
+function greet() {
+  echo "Hello, world!"
+}
+greet    # Hello, world!    # function call
+```
+
+```Bash
+# function with an argument:
+greet() {
+  echo "Hello, $1!"
+}
+greet "Liza"    # Hello, Liza! 
+```
+
+```Bash
+# return value
+
+# method 1 - using 'return' to exit code:
+check_file() {
+  if [ -f "$1" ]; then
+    return 0    # success
+  else
+    return 1    # failure
+  fi
+}
+check_file notes.txt && echo "File exists!"
+
+# method 2 - using 'echo':
+add() {
+  echo $(( $1 + $2 ))
+}
+
+sum=$(add 4 5)
+echo "Result: $sum"
+```
+
+```Bash
+# useful functions added to zshrc file:
+
+# make a directory and go into it
+mkcd() {             
+  mkdir -p "$1" && cd "$1"
+}
+
+# reload zshrc settings
+reload() {             
+  source ~/.zshrc && echo "Zsh config reloaded!"
+}
+
+# go to a projects folder (customized path)
+proj() {               
+  cd ~/OneDrive/Projects/"$1"
+}
+```
+
+### 3.7 Error Handling & Exit Codes
+
 
 
 
